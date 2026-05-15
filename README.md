@@ -12,12 +12,12 @@ package.
 Packages covered:
 
 - [XestiMarkov][xestimarkov] — Markov chain tools
-- [XestiNetwork][xestinetwork] — Network tools
-- [XestiNumbers][xestinumbers] — Numeric tools
-- [XestiSexp][xestisexp] — S-expression encoder and decoder
+- [XestiNetwork][xestinetwork] — A simple network abstraction layer
+- [XestiNumbers][xestinumbers] — A Swift number tower
+- [XestiSexp][xestisexp] — An S-expression encoder and decoder
 - [XestiText][xestitext] — Text formatting tools
-- [XestiTokens][xestitokens] — Tokenizer tools
-- [XestiTools][xestitools] — General-purpose tools
+- [XestiTokens][xestitokens] — A rules-based lexical tokenizer
+- [XestiTools][xestitools] — Tools to ease writing Swift code
 - [XestiXML][xestixml] — XML tools
 
 ## <a name="reference_documentation">Reference Documentation</a>

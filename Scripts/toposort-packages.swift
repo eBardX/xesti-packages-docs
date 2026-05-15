@@ -3,7 +3,7 @@
 // © 2026 John Gary Pusey (see LICENSE.md)
 
 //
-// Reads the umbrella Package.swift and each checkout's Package.swift to
+// Reads the umbrella Package.swift and each checkout’s Package.swift to
 // discover inter-Xesti dependencies, then prints the packages in topological
 // build order (each package after all Xesti packages it depends on).
 //
@@ -32,7 +32,7 @@ func xestiPackages(in text: String) -> [String] {
 
 let packages = xestiPackages(in: contents(of: umbrellaSwift))
 
-// Collect inter-Xesti deps for each package from its checkout's Package.swift.
+// Collect inter-Xesti deps for each package from its checkout’s Package.swift.
 var deps: [String: Set<String>] = .init(uniqueKeysWithValues: packages.map { ($0, []) })
 
 for pkg in packages {
@@ -43,7 +43,7 @@ for pkg in packages {
     }
 }
 
-// Kahn's topological sort.
+// Kahn’s topological sort.
 var inDegree:  [String: Int] = .init(uniqueKeysWithValues: packages.map { ($0, deps[$0]!.count) })
 var prereqOf:  [String: [String]] = [:]
 
