@@ -30,43 +30,57 @@ mkdir -p "$ARCHIVES"
 BUILT_ARCHIVES=()
 
 for pkg in "${ORDERED[@]}"; do
-    echo "=== Building archive: $pkg ==="
+    echo "=== Building archives: $pkg ==="
 
-    ARCHIVE="$ARCHIVES/$pkg.doccarchive"
-    SYMBOL_GRAPHS_RAW=$(mktemp -d)
-    SYMBOL_GRAPHS="$ARCHIVES/$pkg.symbols"
+    # Discover targets by finding all Sources subdirectories that contain a
+    # Documentation.docc bundle. Sorting ensures a stable, alphabetical order,
+    # which places the primary target (same name as the package) first.
+    TARGETS=()
 
-    mkdir -p "$SYMBOL_GRAPHS"
+    while IFS= read -r docc_dir; do
+        TARGETS+=("$(basename "$(dirname "$docc_dir")")")
+    done < <(find "$CHECKOUTS/$pkg/Sources" -name "Documentation.docc" -type d | sort)
 
-    swift build --package-path "$CHECKOUTS/$pkg" \
-                --target "$pkg"                  \
-                -Xswiftc -emit-symbol-graph      \
-                -Xswiftc -emit-symbol-graph-dir  \
-                -Xswiftc "$SYMBOL_GRAPHS_RAW"
+    for target in "${TARGETS[@]}"; do
+        echo "--- Building archive: $target ---"
 
-    find "$SYMBOL_GRAPHS_RAW" -name "${pkg}*.symbols.json" \
-        -exec cp {} "$SYMBOL_GRAPHS/" \;
+        ARCHIVE="$ARCHIVES/$target.doccarchive"
+        SYMBOL_GRAPHS_RAW=$(mktemp -d)
+        SYMBOL_GRAPHS="$ARCHIVES/$target.symbols"
 
-    rm -rf "$SYMBOL_GRAPHS_RAW"
+        mkdir -p "$SYMBOL_GRAPHS"
 
-    # Always enable external link support so later packages can link here. Pass
-    # every already-built archive so DocC can resolve cross-package links.
-    DOCC_FLAGS=(--enable-experimental-external-link-support)
+        swift build --package-path "$CHECKOUTS/$pkg" \
+                    --target "$target"               \
+                    -Xswiftc -emit-symbol-graph      \
+                    -Xswiftc -emit-symbol-graph-dir  \
+                    -Xswiftc "$SYMBOL_GRAPHS_RAW"
 
-    if [[ ${#BUILT_ARCHIVES[@]} -gt 0 ]]; then
-        for dep in "${BUILT_ARCHIVES[@]}"; do
-            DOCC_FLAGS+=(--dependency "$dep")
-        done
-    fi
+        find "$SYMBOL_GRAPHS_RAW" -name "${target}*.symbols.json" \
+            -exec cp {} "$SYMBOL_GRAPHS/" \;
 
-    xcrun docc convert "$CHECKOUTS/$pkg/Sources/$pkg/Documentation.docc" \
-               --additional-symbol-graph-dir "$SYMBOL_GRAPHS"            \
-               --fallback-display-name "$pkg"                            \
-               --fallback-bundle-identifier "$pkg"                       \
-               --output-path "$ARCHIVE"                                  \
-               "${DOCC_FLAGS[@]}"
+        rm -rf "$SYMBOL_GRAPHS_RAW"
 
-    BUILT_ARCHIVES+=("$ARCHIVE")
+        # Always enable external link support so later packages can link here.
+        # Pass every already-built archive so DocC can resolve cross-package
+        # links, including earlier targets within the same package.
+        DOCC_FLAGS=(--enable-experimental-external-link-support)
+
+        if [[ ${#BUILT_ARCHIVES[@]} -gt 0 ]]; then
+            for dep in "${BUILT_ARCHIVES[@]}"; do
+                DOCC_FLAGS+=(--dependency "$dep")
+            done
+        fi
+
+        xcrun docc convert "$CHECKOUTS/$pkg/Sources/$target/Documentation.docc" \
+                   --additional-symbol-graph-dir "$SYMBOL_GRAPHS"                \
+                   --fallback-display-name "$target"                             \
+                   --fallback-bundle-identifier "$target"                        \
+                   --output-path "$ARCHIVE"                                      \
+                   "${DOCC_FLAGS[@]}"
+
+        BUILT_ARCHIVES+=("$ARCHIVE")
+    done
 done
 
 echo "=== Merging archives ==="
@@ -77,4 +91,4 @@ xcrun docc merge "${BUILT_ARCHIVES[@]}"                     \
            --synthesized-landing-page-topics-style list     \
            --output-path "$COMBINED"
 
-echo "=== Packages: ${ORDERED[*]} ==="
+echo "=== Archives: ${BUILT_ARCHIVES[*]} ==="
