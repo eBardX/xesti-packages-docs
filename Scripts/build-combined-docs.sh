@@ -50,10 +50,11 @@ for pkg in "${ORDERED[@]}"; do
 
         mkdir -p "$SYMBOL_GRAPHS"
 
-        swift build --package-path "$CHECKOUTS/$pkg" \
-                    --target "$target"               \
-                    -Xswiftc -emit-symbol-graph      \
-                    -Xswiftc -emit-symbol-graph-dir  \
+        swift build --package-path "$CHECKOUTS/$pkg"          \
+                    --target "$target"                         \
+                    -Xswiftc -emit-symbol-graph                \
+                    -Xswiftc -emit-extension-block-symbols     \
+                    -Xswiftc -emit-symbol-graph-dir            \
                     -Xswiftc "$SYMBOL_GRAPHS_RAW"
 
         find "$SYMBOL_GRAPHS_RAW" -name "${target}*.symbols.json" \
