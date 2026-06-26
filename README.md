@@ -43,7 +43,7 @@ xesti-packages-docs is available under [the MIT license][license].
 [docc]:         https://www.swift.org/documentation/docc/
 [license]:      https://github.com/eBardX/xesti-packages-docs/blob/main/LICENSE.md
 [refdoc]:       https://eBardX.github.io/xesti-packages-docs/documentation/
-[xestiacrhive]: https://github.com/eBardX/XestiArchive
+[xestiarchive]: https://github.com/eBardX/XestiArchive
 [xesticommand]: https://github.com/eBardX/XestiCommand
 [xestimarkov]:  https://github.com/eBardX/XestiMarkov
 [xestinetwork]: https://github.com/eBardX/XestiNetwork
