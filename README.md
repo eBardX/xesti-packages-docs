@@ -17,6 +17,8 @@ repository contains only source and configuration — no generated output.
 
 Packages covered:
 
+- [XestiArchive][xestiarchive] — Archive tools
+- [XestiCommand][xesticommand] — Command tools
 - [XestiMarkov][xestimarkov] — Markov chain tools
 - [XestiNetwork][xestinetwork] — A simple network abstraction layer
 - [XestiNumbers][xestinumbers] — A Swift number tower
@@ -41,6 +43,8 @@ xesti-packages-docs is available under [the MIT license][license].
 [docc]:         https://www.swift.org/documentation/docc/
 [license]:      https://github.com/eBardX/xesti-packages-docs/blob/main/LICENSE.md
 [refdoc]:       https://eBardX.github.io/xesti-packages-docs/documentation/
+[xestiacrhive]: https://github.com/eBardX/XestiArchive
+[xesticommand]: https://github.com/eBardX/XestiCommand
 [xestimarkov]:  https://github.com/eBardX/XestiMarkov
 [xestinetwork]: https://github.com/eBardX/XestiNetwork
 [xestinumbers]: https://github.com/eBardX/XestiNumbers

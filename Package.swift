@@ -1,11 +1,15 @@
-// swift-tools-version: 6.2
+// swift-tools-version: 6.3
 
 // © 2026 John Gary Pusey (see LICENSE.md)
 
 import PackageDescription
 
 let package = Package(name: "xesti-packages-docs",
-                      dependencies: [.package(url: "https://github.com/eBardX/XestiMarkov.git",
+                      dependencies: [.package(url: "https://github.com/eBardX/XestiArchive.git",
+                                              branch: "main"),
+                                     .package(url: "https://github.com/eBardX/XestiCommand.git",
+                                              branch: "main"),
+                                     .package(url: "https://github.com/eBardX/XestiMarkov.git",
                                               branch: "main"),
                                      .package(url: "https://github.com/eBardX/XestiNetwork.git",
                                               branch: "main"),
